@@ -22,6 +22,7 @@ class Material(models.Model):
     https://www.galakmet.ru/directory/density/
 
     """
+
     name = models.CharField(_("name"), max_length=128, unique=True)
     cost = models.PositiveIntegerField(_("cost per m3"), default=0)
     destiny = models.PositiveIntegerField(_("destiny in kg/m3 units"), default=0)
@@ -100,10 +101,18 @@ class AbstractPurchase(models.Model):
 
 
 class PreparedPurchase(AbstractPurchase):
+    """Purchase with prepared properties
+    
+    User can choose prepared purchase settings to order or customize it.
+
+    """
+
     description = models.TextField(_("description"), max_length=512)
 
 
 class Purchase(AbstractPurchase):
+    """Users purchase model"""
+
     code = models.CharField(
         _("unique code"), max_length=32,
         unique=True, default=hex_code,
@@ -130,6 +139,13 @@ class Purchase(AbstractPurchase):
 
 
 class Consult(models.Model):
+    """Purchase consult model
+    
+    If the created purchase is not prepared, then the consultant must contact
+    the customer and accept or reject them. 
+
+    """
+
     purchase = models.ForeignKey(
         Purchase, on_delete=models.CASCADE,
         verbose_name=_("purchase"),
