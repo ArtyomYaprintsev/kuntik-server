@@ -1,3 +1,4 @@
+from typing import Iterable, Optional
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -13,6 +14,9 @@ class Color(models.Model):
         _("description"), max_length=512,
         blank=True, default="",
     )
+
+    def __str__(self) -> str:
+        return f"Color: {self.name}"
 
 
 class Material(models.Model):
@@ -30,6 +34,9 @@ class Material(models.Model):
         _("description"), max_length=512,
         blank=True, default="",
     )
+
+    def __str__(self) -> str:
+        return f"Material: {self.name}"
 
 
 class AbstractPurchase(models.Model):
@@ -107,7 +114,17 @@ class PreparedPurchase(AbstractPurchase):
 
     """
 
+    title = models.CharField(
+        _("title"), max_length=128,
+        default="Prepared purchase",
+    )
     description = models.TextField(_("description"), max_length=512)
+
+    def __str__(self) -> str:
+        return f"#{self.id} {self.title}"
+
+    class Meta:
+        index_together = ["color", "material", "size"]
 
 
 class Purchase(AbstractPurchase):
@@ -129,13 +146,31 @@ class Purchase(AbstractPurchase):
         choices=State.choices, default=State.WAITED,
     )
 
-    address = models.CharField(_("address inside Westland"), max_length=512)
+    address = models.TextField(_("address inside Westland"), max_length=512)
 
     date_created = models.DateTimeField(_("created date"), auto_now_add=True)
     date_updated = models.DateTimeField(_("updated date"), auto_now=True)
 
+    def save(self, *args, **kwargs) -> None:
+        super().save(*args, **kwargs)
+
+        # Create related `Consult` instance on the `Purchase` instance save
+        if not hasattr(self, "consult") and not self.is_prepared():
+            Consult.objects.create(purchase=self)
+
     class Meta:
         ordering = ["-date_created", 'date_updated']
+
+    def __str__(self) -> str:
+        return f"Purchase: {self.code}"
+
+    def is_prepared(self) -> bool:
+        """Check the purchase is not prepared"""
+        return PreparedPurchase.objects.filter(
+            color=self.color,
+            material=self.material,
+            size=self.size,
+        ).exists()
 
 
 class Consult(models.Model):
@@ -146,12 +181,15 @@ class Consult(models.Model):
 
     """
 
-    purchase = models.ForeignKey(
+    purchase = models.OneToOneField(
         Purchase, on_delete=models.CASCADE,
         verbose_name=_("purchase"),
     )
 
-    comment = models.TextField(_("consultant comment"), max_length=512)
+    comment = models.TextField(
+        _("consultant comment"), max_length=512,
+        default="Enter your comment here",
+    )
     is_allowed = models.BooleanField(
         _("consulted and allowed"),
         null=True, default=None,
