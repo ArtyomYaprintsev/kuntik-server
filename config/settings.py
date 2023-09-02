@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-ze(h0$faa*43s-a+ep^r-x!pb&kuaw-=mypep(1ukp3awe_th5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # 3rd parties apps
+    "rest_framework",
 
     # Local apps
     'store',
@@ -125,3 +128,17 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'config.authentication.BearerAuthentication',
+    ],
+    # Most of the api calls will be sent from unauthorized users
+    "DEFAULT_PERMISSION_CLASSES": [
+        'rest_framework.permissions.AllowAny',
+    ],
+    "DEFAULT_THROTTLE_CLASSES": [],
+}
