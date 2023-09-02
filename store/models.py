@@ -6,7 +6,7 @@ from store.utils import hex_code
 
 
 class Color(models.Model):
-    """Purchase color"""
+    """Purchase color."""
 
     name = models.CharField(_("name"), max_length=128, unique=True)
     cost = models.PositiveIntegerField(_("color cost per m2"), default=0)
@@ -22,7 +22,7 @@ class Color(models.Model):
 class Material(models.Model):
     """Purchase material.
 
-    Material density will be taken from
+    Material density will be taken from:
     https://www.galakmet.ru/directory/density/
 
     """
@@ -40,7 +40,7 @@ class Material(models.Model):
 
 
 class AbstractPurchase(models.Model):
-    """The purchase is represented as a cube with some properties"""
+    """The purchase is represented as a cube with some properties."""
 
     DEFAULT_PURCHASE_PRICE = 10_000
 
@@ -70,12 +70,12 @@ class AbstractPurchase(models.Model):
 
     @property
     def square(self):
-        """Calculates as the face of the cube"""
+        """Calculates as the face of the cube."""
         return self.size * self.size * 6
 
     @property
     def volume(self):
-        """Calculates as the volume of the cube"""
+        """Calculates as the volume of the cube."""
         return self.size * self.size * self.size
 
     @property
@@ -84,7 +84,7 @@ class AbstractPurchase(models.Model):
 
     @property
     def price(self):
-        """Total purchase price
+        """Total purchase price.
 
         Calculated by summing default purchase price and material and color
         costs.
@@ -108,7 +108,7 @@ class AbstractPurchase(models.Model):
 
 
 class PreparedPurchase(AbstractPurchase):
-    """Purchase with prepared properties
+    """Purchase with prepared properties.
     
     User can choose prepared purchase settings to order or customize it.
 
@@ -128,7 +128,7 @@ class PreparedPurchase(AbstractPurchase):
 
 
 class Purchase(AbstractPurchase):
-    """Users purchase model"""
+    """Users purchase model."""
 
     code = models.CharField(
         _("unique code"), max_length=32,
@@ -165,7 +165,7 @@ class Purchase(AbstractPurchase):
         return f"Purchase: {self.code}"
 
     def is_prepared(self) -> bool:
-        """Check the purchase is not prepared"""
+        """Check the purchase is not prepared."""
         return PreparedPurchase.objects.filter(
             color=self.color,
             material=self.material,
@@ -174,7 +174,7 @@ class Purchase(AbstractPurchase):
 
 
 class Consult(models.Model):
-    """Purchase consult model
+    """Purchase consult model.
     
     If the created purchase is not prepared, then the consultant must contact
     the customer and accept or reject them. 

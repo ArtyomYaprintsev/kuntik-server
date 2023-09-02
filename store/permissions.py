@@ -2,6 +2,12 @@ from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 
 class IsAuthenticatedOrListOnlyPermission(BasePermission):
+    """
+
+    If user is unauthenticated allows access only for queryset-level safe
+    methods.
+
+    """
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
             return True
@@ -13,6 +19,12 @@ class IsAuthenticatedOrListOnlyPermission(BasePermission):
 
 
 class IsAuthenticatedOrCreateRetrievePermission(BasePermission):
+    """
+
+    If user is unauthenticated allows access for `HEAD`, `OPTIONS` methods
+    and `create` or `retrieve` actions.
+
+    """
     def has_permission(self, request, view):
         if request.method in ("POST", "HEAD", "OPTIONS"):
             return True
