@@ -25,6 +25,8 @@ from store import views as store_views
 store = routers.DefaultRouter()
 store.register(r'colors', store_views.ColorViewSet)
 store.register(r'materials', store_views.MaterialViewSet)
+store.register(r'prepared-purchases', store_views.PreparedPurchaseViewSet)
+store.register(r'purchases', store_views.PurchaseViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

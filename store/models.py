@@ -20,7 +20,7 @@ class Color(models.Model):
 
 
 class Material(models.Model):
-    """Purchase material
+    """Purchase material.
 
     Material density will be taken from
     https://www.galakmet.ru/directory/density/
@@ -42,7 +42,7 @@ class Material(models.Model):
 class AbstractPurchase(models.Model):
     """The purchase is represented as a cube with some properties"""
 
-    DEFAULT_PURCHASE_PRICE = 1000
+    DEFAULT_PURCHASE_PRICE = 10_000
 
     color = models.ForeignKey(
         Color, on_delete=models.PROTECT,
