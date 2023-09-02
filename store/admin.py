@@ -12,7 +12,7 @@ class ColorAdmin(admin.ModelAdmin):
 
 @admin.register(models.Material)
 class MaterialAdmin(admin.ModelAdmin):
-    list_display = ("name", "cost", "destiny", )
+    list_display = ("name", "cost", "density", )
     list_display_links = ("name", )
     sortable_by = ("name", "cost", )
 

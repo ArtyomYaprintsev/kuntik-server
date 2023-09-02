@@ -29,7 +29,7 @@ class Material(models.Model):
 
     name = models.CharField(_("name"), max_length=128, unique=True)
     cost = models.PositiveIntegerField(_("cost per m3"), default=0)
-    destiny = models.PositiveIntegerField(_("destiny in kg/m3 units"), default=0)
+    density = models.PositiveIntegerField(_("density in kg/m3 units"), default=0)
     description = models.TextField(
         _("description"), max_length=512,
         blank=True, default="",
@@ -80,7 +80,7 @@ class AbstractPurchase(models.Model):
 
     @property
     def weight(self):
-        return self.material.destiny * self.volume
+        return self.material.density * self.volume
 
     @property
     def price(self):
