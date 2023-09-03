@@ -125,6 +125,7 @@ class PreparedPurchase(AbstractPurchase):
 
     class Meta:
         index_together = ["color", "material", "size"]
+        ordering = ["title"]
 
 
 class Purchase(AbstractPurchase):
