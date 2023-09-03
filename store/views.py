@@ -98,7 +98,7 @@ class PurchaseViewSet(ModelViewSet):
             partial = request.method == "PATCH"
 
             serializer = self.get_serializer(
-                instance, data=request.data, partial=partial,
+                consult, data=request.data, partial=partial,
             )
             serializer.is_valid(raise_exception=True)
             serializer.save()
